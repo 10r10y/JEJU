@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:api.anthropic.com)",
+      "PowerShell(New-Item *)",
+      "PowerShell(Get-ChildItem \"D:\\\\2026\\\\ClaudeProject\\\\jeju\\\\src\" -Recurse | Where-Object { -not $_.PSIsContainer } | Select-Object @{N='Path';E={$_.FullName.Replace\\('D:\\\\2026\\\\ClaudeProject\\\\jeju\\\\src\\\\','src\\\\'\\)}}, Length | Format-Table -AutoSize)",
+      "Skill(run)",
+      "PowerShell(Start-Process \"http://localhost:5173\")",
+      "Bash(curl -s http://localhost:5173)",
+      "Bash(curl -s \"http://localhost:5173/src/style.css\")",
+      "Bash(python3 -c \"import sys; data=sys.stdin.read\\(\\); idx=data.find\\('--paper'\\); print\\(data[max\\(0,idx-50\\):idx+200]\\)\")"
+    ]
+  }
+}

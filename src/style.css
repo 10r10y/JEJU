@@ -273,7 +273,6 @@ html[data-mode="night"] .mode-toggle .ico-moon { opacity: 1; transform: rotate(0
   border-top: 1px solid rgba(255, 255, 255, 0.7);
   transition: transform 0.44s cubic-bezier(0.32, 0.72, 0, 1);
   will-change: transform;
-  touch-action: none;
   display: flex;
   flex-direction: column;
 }
@@ -284,6 +283,7 @@ html[data-mode="night"] .mode-toggle .ico-moon { opacity: 1; transform: rotate(0
   justify-content: center;
   cursor: grab;
   flex: 0 0 auto;
+  touch-action: none;
 }
 .grip i {
   width: 42px;

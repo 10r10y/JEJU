@@ -24,7 +24,7 @@ export const DAYS: Day[] = [
   {
     id: 1,
     date: '6.9',
-    title: '抵达济州 + 东线',
+    title: '抵达 + 东线',
     en: 'Arrival + East Line',
     note: '浦东 05:05 起飞 · 济州 07:15 抵达',
     spots: [
@@ -240,9 +240,9 @@ export const DAYS: Day[] = [
   {
     id: 3,
     date: '6.11',
-    title: '换酒店 + 射击 + 柱状节理带',
+    title: '西南线',
     en: 'Hotel Move + Shooting + Jusangjeolli',
-    note: '咸德退房 · 乌里酒店入住',
+    note: 'Shooting + 柱状节理带',
     spots: [
       {
         name: '咸德格洛斯特退房',
@@ -361,7 +361,7 @@ export const DAYS: Day[] = [
   {
     id: 4,
     date: '6.12',
-    title: '汉拿山城板岳',
+    title: '汉拿山',
     en: 'Hallasan Seongpanak',
     note: '城板岳路线 · 全程约 8-9 小时',
     spots: [

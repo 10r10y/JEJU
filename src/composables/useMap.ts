@@ -14,14 +14,16 @@ export function useMap(mapEl: () => HTMLElement | null) {
   const lastPts = ref<[number, number][]>([])
   const markers = shallowRef<Record<string, L.Marker>>({})
   const lines = shallowRef<L.Polyline[]>([])
+  const tileUrl = import.meta.env.DEV
+    ? 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+    : '/api/tiles/{z}/{x}/{y}'
 
   function init() {
     const el = mapEl()
     if (!el || map.value) return
     map.value = L.map(el, { zoomControl: false, attributionControl: true }).setView([33.38, 126.55], 10)
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer(tileUrl, {
       maxZoom: 18,
-      crossOrigin: true,
       attribution: '© OpenStreetMap',
       errorTileUrl: 'data:image/gif;base64,R0lGODlhAQABAIAAAOXl5QAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==',
     }).addTo(map.value)

@@ -463,37 +463,24 @@ html[data-mode="night"] .mode-toggle .ico-moon { opacity: 1; transform: rotate(0
   box-shadow: 0 4px 14px -10px rgba(30, 26, 20, 0.4);
 }
 .card:active { transform: scale(0.992); }
-.card .time {
+.card .name {
   font-family: var(--serif);
   font-style: italic;
   font-weight: 600;
-  font-size: 16px;
-  color: var(--c);
-  line-height: 1;
-  letter-spacing: 0.01em;
-}
-.card .name {
-  font-family: var(--cjk-serif);
-  font-weight: 600;
   font-size: 17px;
-  color: var(--ink);
-  margin-top: 6px;
+  color: var(--c);
   letter-spacing: 0.01em;
   line-height: 1.25;
 }
 .card .foreign { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: 0.03em; font-weight: 500; }
-.card .note {
-  display: inline-block;
-  white-space: nowrap;
-  font-size: 10.5px;
-  color: var(--c);
-  border: 1px solid var(--c);
-  border-radius: 999px;
-  padding: 2px 10px;
-  margin-top: 9px;
+.card .card-meta {
+  margin-top: 7px;
+  font-family: var(--cjk-serif);
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--ink);
   font-weight: 600;
-  letter-spacing: 0.02em;
-  opacity: 0.85;
+  letter-spacing: 0.01em;
 }
 .stop.sel .card {
   border-style: solid;

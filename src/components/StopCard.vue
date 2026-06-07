@@ -6,10 +6,9 @@
     </div>
     <div class="body">
       <div class="card">
-        <div class="time">{{ spot.time }}</div>
         <div class="name">{{ spot.name }}</div>
         <div class="foreign">{{ spot.en }} · {{ spot.kr }}</div>
-        <span v-if="spot.note" class="note">{{ spot.note }}</span>
+        <div v-if="spot.note" class="card-meta">{{ spot.note }}</div>
       </div>
       <TransportRow :transport="spot.to" />
     </div>

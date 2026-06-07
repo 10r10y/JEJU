@@ -536,8 +536,8 @@ html[data-mode="night"] .mode-toggle .ico-moon { opacity: 1; transform: rotate(0
   margin: 8px 0 2px;
   padding: 13px 15px;
   border-radius: 13px;
-  background: var(--paper);
-  border: 1.5px dashed var(--hair-strong);
+  background: color-mix(in srgb, var(--c) 10%, var(--surface));
+  border: 1.5px dashed color-mix(in srgb, var(--c) 48%, var(--hair-strong));
 }
 .t-line {
   display: flex;
@@ -546,8 +546,8 @@ html[data-mode="night"] .mode-toggle .ico-moon { opacity: 1; transform: rotate(0
   font-size: 12px;
   padding: 4px 0;
 }
-.t-line .k { color: var(--muted); font-weight: 500; flex: 0 0 auto; letter-spacing: 0.02em; }
-.t-line .v { color: var(--ink); text-align: right; font-weight: 600; }
+.t-line .k { color: color-mix(in srgb, var(--c) 64%, var(--muted)); font-weight: 500; flex: 0 0 auto; letter-spacing: 0.02em; }
+.t-line .v { color: color-mix(in srgb, var(--c) 70%, var(--ink)); text-align: right; font-weight: 600; }
 .t-tip {
   display: flex;
   gap: 7px;
@@ -555,7 +555,7 @@ html[data-mode="night"] .mode-toggle .ico-moon { opacity: 1; transform: rotate(0
   color: var(--c);
   margin-top: 9px;
   padding-top: 10px;
-  border-top: 1px dashed var(--hair-strong);
+  border-top: 1px dashed color-mix(in srgb, var(--c) 42%, var(--hair-strong));
   line-height: 1.5;
   font-weight: 500;
 }

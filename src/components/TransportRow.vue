@@ -1,5 +1,5 @@
 <template>
-  <div v-if="transport" class="tp">
+  <div v-if="transport" class="tp" :style="{ '--c': color }">
     <div
       class="tp-row"
       :class="{ tappable: hasDetail, open: isOpen }"
@@ -29,7 +29,7 @@
 import { ref, computed } from 'vue'
 import type { Transport } from '../types/itinerary'
 
-const props = defineProps<{ transport?: Transport }>()
+const props = defineProps<{ transport?: Transport; color: string }>()
 
 const ICONS: Record<string, string> = {
   bus: '<path d="M4 5h16v9H4zM4 14v3M20 14v3M7 17v1M17 17v1M4 9h16"/>',

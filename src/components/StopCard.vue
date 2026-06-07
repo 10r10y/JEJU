@@ -10,7 +10,7 @@
         <div class="foreign">{{ spot.en }} · {{ spot.kr }}</div>
         <div v-if="spot.note" class="card-meta">{{ spot.note }}</div>
       </div>
-      <TransportRow :transport="spot.to" />
+      <TransportRow :transport="spot.to" :color="color" />
     </div>
   </div>
 </template>

@@ -133,29 +133,30 @@ export function useMap(mapEl: () => HTMLElement | null) {
     })
   }
 
-  function panTo(lat: number, lng: number, focusY?: number) {
+  function panTo(lat: number, lng: number, focusY?: number, zoom?: number) {
     const m = map.value
     if (!m) return
+    const targetZoom = zoom ?? m.getZoom()
 
     if (typeof focusY !== 'number') {
-      m.panTo([lat, lng], { animate: true, duration: 0.5 })
+      m.setView([lat, lng], targetZoom, { animate: true, duration: 0.55 })
       return
     }
 
     const size = m.getSize()
     const desiredY = Math.max(0, Math.min(size.y, focusY))
-    const targetPoint = m.project([lat, lng], m.getZoom())
+    const targetPoint = m.project([lat, lng], targetZoom)
     const centerPoint = targetPoint.add([0, size.y / 2 - desiredY])
-    m.panTo(m.unproject(centerPoint, m.getZoom()), { animate: true, duration: 0.5 })
+    m.setView(m.unproject(centerPoint, targetZoom), targetZoom, { animate: true, duration: 0.55 })
   }
 
   function recenter(viewport?: FitViewport) {
     fitPoints(lastPts.value, viewport)
   }
 
-  function invalidateSize(viewport?: FitViewport) {
+  function invalidateSize(viewport?: FitViewport, refit = true) {
     map.value?.invalidateSize()
-    fitPoints(lastPts.value, viewport)
+    if (refit) fitPoints(lastPts.value, viewport)
   }
 
   onUnmounted(() => {

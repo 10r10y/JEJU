@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import ModeToggle from './components/ModeToggle.vue'
 import SheetHead from './components/SheetHead.vue'
 import DayTabs from './components/DayTabs.vue'
@@ -70,6 +70,7 @@ const sheet = useSheet(() => sheetEl.value)
 const mapApi = useMap(() => mapEl.value)
 
 const showRecenterButton = false
+const stopFocusZoom = 17
 const recenterHidden = computed(() => sheet.curY.value < sheet.MID() * 0.5)
 // The sheet is translated down from the top, so the visible sheet height is appHeight - curY.
 const recenterBottom = computed(() => {
@@ -100,7 +101,7 @@ function onSelectStop(dayId: number, idx: number) {
   const day = DAYS.find(d => d.id === dayId)
   if (day) {
     const focusY = Math.max(0, sheet.curY.value / 2)
-    mapApi.panTo(day.spots[idx].lat, day.spots[idx].lng, focusY)
+    mapApi.panTo(day.spots[idx].lat, day.spots[idx].lng, focusY, stopFocusZoom)
   }
 }
 
@@ -123,5 +124,9 @@ onMounted(() => {
   mapApi.init()
   mapApi.buildMap(activeDayId.value, true, onMarkerClick)
   setTimeout(() => mapApi.invalidateSize(mapFitViewport()), 350)
+})
+
+watch(() => sheet.snapPoint.value, () => {
+  setTimeout(() => mapApi.invalidateSize(mapFitViewport(), false), 460)
 })
 </script>

@@ -1,12 +1,12 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 
-export type SnapPoint = 'full' | 'mid' | 'peek'
+export type SnapPoint = 'full' | 'mid' | 'peek' | 'hidden'
 
 export function useSheet(sheetEl: () => HTMLElement | null) {
   const curY = ref(0)
   const snapPoint = ref<SnapPoint>('mid')
 
-  let H = 0, FULL = 0, MID = 0, PEEK = 0
+  let H = 0, FULL = 0, MID = 0, PEEK = 0, HIDDEN = 0
   let dragging = false
   let moved = false
   let startY = 0
@@ -20,10 +20,11 @@ export function useSheet(sheetEl: () => HTMLElement | null) {
     FULL = 0
     MID = Math.round(H * 0.46)
     PEEK = H - 176
+    HIDDEN = H
     updateListViewport()
   }
 
-  function snaps() { return [FULL, MID, PEEK] }
+  function snaps() { return [FULL, MID, PEEK, HIDDEN] }
 
   function nearest(y: number) {
     return snaps().reduce((a, b) => Math.abs(b - y) < Math.abs(a - y) ? b : a)
@@ -32,7 +33,7 @@ export function useSheet(sheetEl: () => HTMLElement | null) {
   function setY(y: number) {
     const el = sheetEl()
     if (!el) return
-    curY.value = Math.max(FULL, Math.min(PEEK, y))
+    curY.value = Math.max(FULL, Math.min(HIDDEN, y))
     el.style.transform = `translateY(${curY.value}px)`
     updateSnapPoint()
     updateListViewport()
@@ -56,6 +57,7 @@ export function useSheet(sheetEl: () => HTMLElement | null) {
 
   function updateSnapPoint() {
     if (curY.value <= FULL + 10) snapPoint.value = 'full'
+    else if (curY.value >= HIDDEN - 10) snapPoint.value = 'hidden'
     else if (curY.value >= PEEK - 10) snapPoint.value = 'peek'
     else snapPoint.value = 'mid'
   }
@@ -144,5 +146,5 @@ export function useSheet(sheetEl: () => HTMLElement | null) {
     window.removeEventListener('resize', onResize)
   })
 
-  return { curY, snapPoint, onDown, onUp, onMove, cycleSnap, ensureOpen, snapTo, measureAndInit: init, FULL: () => FULL, MID: () => MID, PEEK: () => PEEK }
+  return { curY, snapPoint, onDown, onUp, onMove, cycleSnap, ensureOpen, snapTo, measureAndInit: init, FULL: () => FULL, MID: () => MID, PEEK: () => PEEK, HIDDEN: () => HIDDEN }
 }

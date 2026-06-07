@@ -4,6 +4,11 @@ import type { Day } from '../types/itinerary'
 import type { DayId } from '../types/itinerary'
 import { DAYS, DAY_COLORS } from '../data/itinerary'
 
+interface FitViewport {
+  topInset?: number
+  bottomInset?: number
+}
+
 export function useMap(mapEl: () => HTMLElement | null) {
   const map = shallowRef<L.Map | null>(null)
   const lastPts = ref<[number, number][]>([])
@@ -44,7 +49,21 @@ export function useMap(mapEl: () => HTMLElement | null) {
     setTimeout(() => { if (p) p.style.strokeDasharray = 'none' }, 1050)
   }
 
-  function buildMap(dayId: DayId, animate: boolean, onMarkerClick: (dayId: number, idx: number) => void) {
+  function fitPoints(pts: [number, number][], viewport?: FitViewport) {
+    const m = map.value
+    if (!m || !pts.length) return
+
+    const side = 60
+    const top = Math.max(side, viewport?.topInset ?? side)
+    const bottom = Math.max(side, (viewport?.bottomInset ?? 0) + side)
+    m.fitBounds(pts, {
+      paddingTopLeft: [side, top],
+      paddingBottomRight: [side, bottom],
+      maxZoom: 12,
+    })
+  }
+
+  function buildMap(dayId: DayId, animate: boolean, onMarkerClick: (dayId: number, idx: number) => void, viewport?: FitViewport) {
     clearLayers()
     const m = map.value
     if (!m) return
@@ -93,7 +112,7 @@ export function useMap(mapEl: () => HTMLElement | null) {
 
     if (pts.length) {
       lastPts.value = pts
-      m.fitBounds(pts, { padding: [60, 60], maxZoom: 12 })
+      fitPoints(pts, viewport)
     }
   }
 
@@ -128,17 +147,13 @@ export function useMap(mapEl: () => HTMLElement | null) {
     m.panTo(m.unproject(centerPoint, m.getZoom()), { animate: true, duration: 0.5 })
   }
 
-  function recenter() {
-    if (lastPts.value.length && map.value) {
-      map.value.fitBounds(lastPts.value, { padding: [60, 60], maxZoom: 12 })
-    }
+  function recenter(viewport?: FitViewport) {
+    fitPoints(lastPts.value, viewport)
   }
 
-  function invalidateSize() {
+  function invalidateSize(viewport?: FitViewport) {
     map.value?.invalidateSize()
-    if (lastPts.value.length && map.value) {
-      map.value.fitBounds(lastPts.value, { padding: [60, 60], maxZoom: 12 })
-    }
+    fitPoints(lastPts.value, viewport)
   }
 
   onUnmounted(() => {

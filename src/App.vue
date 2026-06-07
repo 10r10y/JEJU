@@ -19,7 +19,7 @@
       :class="{ hide: recenterHidden }"
       :style="{ bottom: recenterBottom }"
       aria-label="重置视角"
-      @click="mapApi.recenter()"
+      @click="mapApi.recenter(mapFitViewport())"
     >
       <svg viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="3.2"/>
@@ -80,7 +80,7 @@ function onDayChange(id: DayId) {
   activeDayId.value = id
   activeKey.value = null
   mapApi.setActiveMarker(null)
-  mapApi.buildMap(id, true, onMarkerClick)
+  mapApi.buildMap(id, true, onMarkerClick, mapFitViewport())
 }
 
 function onMarkerClick(dayId: number, idx: number) {
@@ -102,6 +102,15 @@ function onSelectStop(dayId: number, idx: number) {
   }
 }
 
+function mapFitViewport() {
+  const appHeight = sheetEl.value?.parentElement?.clientHeight || sheetEl.value?.clientHeight || 0
+  const sheetTop = Math.max(0, Math.min(appHeight, sheet.curY.value))
+  return {
+    topInset: 116,
+    bottomInset: Math.max(0, appHeight - sheetTop),
+  }
+}
+
 let gripMoved = false
 function onGripClick() {
   if (gripMoved) { gripMoved = false; return }
@@ -111,6 +120,6 @@ function onGripClick() {
 onMounted(() => {
   mapApi.init()
   mapApi.buildMap(activeDayId.value, true, onMarkerClick)
-  setTimeout(() => mapApi.invalidateSize(), 350)
+  setTimeout(() => mapApi.invalidateSize(mapFitViewport()), 350)
 })
 </script>

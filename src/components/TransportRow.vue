@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import type { Transport } from '../types/itinerary'
 
 const props = defineProps<{ transport?: Transport; color: string }>()
@@ -48,11 +48,21 @@ const hasDetail = computed(() =>
   !!(props.transport?.detail?.rows?.length)
 )
 
-function toggle() {
+function measureDetailHeight() {
+  const inner = detailInnerEl.value
+  if (!inner) return
+
+  const styles = window.getComputedStyle(inner)
+  const marginY = parseFloat(styles.marginTop) + parseFloat(styles.marginBottom)
+  detailHeight.value = Math.ceil(inner.offsetHeight + marginY + 4)
+}
+
+async function toggle() {
   if (!hasDetail.value) return
   isOpen.value = !isOpen.value
-  if (isOpen.value && detailInnerEl.value) {
-    detailHeight.value = detailInnerEl.value.scrollHeight + 6
+  if (isOpen.value) {
+    await nextTick()
+    measureDetailHeight()
   }
 }
 </script>

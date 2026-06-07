@@ -15,6 +15,7 @@
 
     <!-- Recenter button -->
     <button
+      v-if="showRecenterButton"
       class="recenter"
       :class="{ hide: recenterHidden }"
       :style="{ bottom: recenterBottom }"
@@ -68,6 +69,7 @@ const totalSpots = computed(() => DAYS.reduce((a, d) => a + d.spots.length, 0))
 const sheet = useSheet(() => sheetEl.value)
 const mapApi = useMap(() => mapEl.value)
 
+const showRecenterButton = false
 const recenterHidden = computed(() => sheet.curY.value < sheet.MID() * 0.5)
 // The sheet is translated down from the top, so the visible sheet height is appHeight - curY.
 const recenterBottom = computed(() => {

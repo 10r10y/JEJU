@@ -8,7 +8,7 @@
       <div class="brand">
         <div class="brand-eyebrow">Itinerary</div>
         <div class="brand-name">JEJU<span class="zh">济州岛</span></div>
-        <div class="brand-meta">6.9 – 6.13 · 5天4晚 · {{ totalSpots }} 处停留</div>
+        <div class="brand-meta">6.9 – 6.13 · 5天4晚 · {{ totalSpots }} 项安排</div>
       </div>
       <ModeToggle />
     </div>
@@ -96,7 +96,10 @@ function onSelectStop(dayId: number, idx: number) {
   activeKey.value = k
   mapApi.setActiveMarker(k)
   const day = DAYS.find(d => d.id === dayId)
-  if (day) mapApi.panTo(day.spots[idx].lat, day.spots[idx].lng)
+  if (day) {
+    const focusY = Math.max(0, sheet.curY.value / 2)
+    mapApi.panTo(day.spots[idx].lat, day.spots[idx].lng, focusY)
+  }
 }
 
 let gripMoved = false

@@ -7,7 +7,7 @@
       </div>
       <div class="sh-text">
         <div class="sh-title">完整行程</div>
-        <div class="sh-meta">6.9 – 6.13 · 4 条线路 · 共 {{ totalSpots }} 处停留</div>
+        <div class="sh-meta">6.9 – 6.13 · {{ totalDays }} 天行程 · 共 {{ totalSpots }} 项安排</div>
       </div>
     </template>
     <!-- Single day -->

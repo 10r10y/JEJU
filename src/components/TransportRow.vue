@@ -37,6 +37,7 @@ const ICONS: Record<string, string> = {
   boat: '<path d="M3 14h18l-2 5H5zM12 3v11M6 9l6-3 6 3"/>',
   scooter: '<path d="M5 17a2 2 0 100-4 2 2 0 000 4zM18 17a2 2 0 100-4 2 2 0 000 4zM7 15h8l3-6h-3M11 9l-1 6"/>',
   plane: '<path d="M21 16l-8-4V5a1 1 0 00-2 0v7l-8 4v2l8-2 0 3-2 1v1l3-1 3 1v-1l-2-1 0-3z"/>',
+  walk: '<path d="M13 5a2 2 0 100-4 2 2 0 000 4zM10 22l2-7M16 22l-3-7-3-3 1-5M7 12l3-4 4 2 3 4"/>',
 }
 
 const isOpen = ref(false)

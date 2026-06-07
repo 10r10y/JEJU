@@ -1,4 +1,4 @@
-export type TransportMode = 'bus' | 'car' | 'boat' | 'scooter' | 'plane'
+export type TransportMode = 'bus' | 'car' | 'boat' | 'scooter' | 'plane' | 'walk'
 
 export interface TransportDetail {
   rows: [string, string][]

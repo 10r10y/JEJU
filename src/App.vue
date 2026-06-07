@@ -69,15 +69,18 @@ const sheet = useSheet(() => sheetEl.value)
 const mapApi = useMap(() => mapEl.value)
 
 const recenterHidden = computed(() => sheet.curY.value < sheet.MID() * 0.5)
-// sheet is abs bottom:0 height:100%, so its top offset = appHeight - curY; distance from app bottom = curY
-const recenterBottom = computed(() => `${sheet.curY.value + 12}px`)
+// The sheet is translated down from the top, so the visible sheet height is appHeight - curY.
+const recenterBottom = computed(() => {
+  const appHeight = sheetEl.value?.parentElement?.clientHeight || sheetEl.value?.clientHeight || 0
+  const visibleSheetHeight = Math.max(0, appHeight - sheet.curY.value)
+  return `${visibleSheetHeight + 12}px`
+})
 
 function onDayChange(id: DayId) {
   activeDayId.value = id
   activeKey.value = null
   mapApi.setActiveMarker(null)
   mapApi.buildMap(id, true, onMarkerClick)
-  sheet.ensureOpen()
 }
 
 function onMarkerClick(dayId: number, idx: number) {

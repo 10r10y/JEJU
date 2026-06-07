@@ -52,11 +52,15 @@ function animDelay(dayId: number, spotIdx: number): number {
 }
 
 function scrollToKey(key: string) {
-  if (!listEl.value) return
-  const stopEl = listEl.value.querySelector<HTMLElement>(`[data-k="${key}"]`)
+  const list = listEl.value
+  if (!list) return
+  const stopEl = list.querySelector<HTMLElement>(`[data-k="${key}"]`)
   if (stopEl) {
     setTimeout(() => {
-      listEl.value?.scrollTo({ top: stopEl.offsetTop - 18, behavior: 'smooth' })
+      const listRect = list.getBoundingClientRect()
+      const stopRect = stopEl.getBoundingClientRect()
+      const top = list.scrollTop + stopRect.top - listRect.top - 18
+      list.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
     }, 80)
   }
 }

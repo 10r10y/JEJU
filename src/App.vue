@@ -28,7 +28,7 @@
     </button>
 
     <!-- Bottom sheet -->
-    <div class="sheet" ref="sheetEl">
+    <div class="sheet" :class="`sheet-${sheet.snapPoint.value}`" ref="sheetEl">
       <div class="grip" @mousedown="sheet.onDown" @touchstart.prevent="sheet.onDown" @click="onGripClick">
         <i />
       </div>

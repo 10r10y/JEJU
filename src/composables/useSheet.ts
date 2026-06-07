@@ -11,14 +11,16 @@ export function useSheet(sheetEl: () => HTMLElement | null) {
   let moved = false
   let startY = 0
   let startT = 0
+  let resizeObserver: ResizeObserver | null = null
 
   function measure() {
     const el = sheetEl()
     if (!el) return
-    H = el.clientHeight
+    H = el.parentElement?.clientHeight || el.clientHeight
     FULL = 0
     MID = Math.round(H * 0.46)
     PEEK = H - 176
+    updateListViewport()
   }
 
   function snaps() { return [FULL, MID, PEEK] }
@@ -33,6 +35,23 @@ export function useSheet(sheetEl: () => HTMLElement | null) {
     curY.value = Math.max(FULL, Math.min(PEEK, y))
     el.style.transform = `translateY(${curY.value}px)`
     updateSnapPoint()
+    updateListViewport()
+  }
+
+  function updateListViewport() {
+    const el = sheetEl()
+    if (!el || !H) return
+
+    const list = el.querySelector<HTMLElement>('.list')
+    if (!list) return
+
+    const fixedHeight = Array.from(el.children).reduce((total, child) => {
+      return child === list ? total : total + (child as HTMLElement).offsetHeight
+    }, 0)
+
+    const visibleHeight = Math.max(0, H - curY.value)
+    const listHeight = Math.max(0, visibleHeight - fixedHeight)
+    el.style.setProperty('--sheet-list-height', `${listHeight}px`)
   }
 
   function updateSnapPoint() {
@@ -44,7 +63,7 @@ export function useSheet(sheetEl: () => HTMLElement | null) {
   function snapTo(y: number) {
     const el = sheetEl()
     if (!el) return
-    el.style.transition = 'transform .44s cubic-bezier(.32,.72,0,1)'
+    el.style.transition = 'transform .44s cubic-bezier(.32,.72,0,1), border-radius .24s ease'
     setY(y)
   }
 
@@ -59,6 +78,14 @@ export function useSheet(sheetEl: () => HTMLElement | null) {
     snapTo(s[(idx - 1 + s.length) % s.length])
   }
 
+  function onMove(e: MouseEvent | TouchEvent) {
+    if (!dragging) return
+    if (e.cancelable) e.preventDefault()
+    const y = 'touches' in e ? e.touches[0].clientY : e.clientY
+    if (Math.abs(y - startY) > 3) moved = true
+    setY(startT + (y - startY))
+  }
+
   function onDown(e: MouseEvent | TouchEvent) {
     dragging = true
     moved = false
@@ -67,18 +94,19 @@ export function useSheet(sheetEl: () => HTMLElement | null) {
     const el = sheetEl()
     if (el) el.style.transition = 'none'
     e.preventDefault()
-  }
-
-  function onMove(e: MouseEvent | TouchEvent) {
-    if (!dragging) return
-    const y = 'touches' in e ? e.touches[0].clientY : e.clientY
-    if (Math.abs(y - startY) > 3) moved = true
-    setY(startT + (y - startY))
+    // Attach move listeners only while dragging so list scrolling stays responsive.
+    if ('touches' in e) {
+      window.addEventListener('touchmove', onMove, { passive: false })
+    } else {
+      window.addEventListener('mousemove', onMove)
+    }
   }
 
   function onUp() {
     if (!dragging) return
     dragging = false
+    window.removeEventListener('touchmove', onMove)
+    window.removeEventListener('mousemove', onMove)
     if (moved) snapTo(nearest(curY.value))
   }
 
@@ -94,17 +122,23 @@ export function useSheet(sheetEl: () => HTMLElement | null) {
   }
 
   onMounted(() => {
-    window.addEventListener('mousemove', onMove)
-    window.addEventListener('touchmove', onMove, { passive: false })
     window.addEventListener('mouseup', onUp)
     window.addEventListener('touchend', onUp)
     window.addEventListener('resize', onResize)
+
+    const el = sheetEl()
+    if (el && 'ResizeObserver' in window) {
+      resizeObserver = new ResizeObserver(updateListViewport)
+      Array.from(el.children).forEach(child => resizeObserver?.observe(child))
+    }
+
     setTimeout(init, 300)
   })
 
   onUnmounted(() => {
-    window.removeEventListener('mousemove', onMove)
+    resizeObserver?.disconnect()
     window.removeEventListener('touchmove', onMove)
+    window.removeEventListener('mousemove', onMove)
     window.removeEventListener('mouseup', onUp)
     window.removeEventListener('touchend', onUp)
     window.removeEventListener('resize', onResize)
